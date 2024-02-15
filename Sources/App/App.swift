@@ -15,6 +15,8 @@ struct App {
     
     app.middleware.use(fileMiddleware)
 
+    app.middleware.use(CORSMiddleware())
+
     let transport = VaporTransport(routesBuilder: app)
 
     try APIHandler().registerHandlers(on: transport)

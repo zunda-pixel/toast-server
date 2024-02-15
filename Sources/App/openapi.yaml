@@ -3,36 +3,120 @@ info:
   title: GreetingService
   version: 1.0.0
 servers:
-  - url: https://hello-world-swift-bf666132a0b7.herokuapp.com/
-    description: Producction deployment.
-  - url: http://127.0.0.1:8080/
+  # - url: https://hello-world-swift-bf666132a0b7.herokuapp.com/
+  #   description: Producction deployment.
+  - url: http://localhost:8080/
     description: Localhost deployment.
 paths:
-  /greet:
+  /user:
     get:
-      operationId: getGreeting
+      tags:
+        - User
+      summary: Find user by ID
+      description: Returns a single user
+      operationId: getUserById
       parameters:
-        - name: name
-          required: true
+        - name: userID
           in: query
-          description: The name used in the returned greeting.
+          description: ID of user to return
+          required: true
           schema:
             type: string
       responses:
         '200':
-          description: A success response with a greeting.
+          description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Greeting'
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Pet not found
+    post:
+      tags:
+        - User
+      summary: Post a user
+      description: ''
+      operationId: postUser
+      requestBody:
+        required: true
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      responses:
+        '400':
+          description: Invalid input
+    delete:
+      tags:
+        - User
+      summary: Delete user by ID
+      description: Delete user by ID
+      operationId: deleteUserByID
+      parameters:
+        - name: userID
+          in: query
+          description: ID of user to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: User not found
+    patch:
+      tags:
+        - User
+      summary: Update User
+      operationId: updateUserByID
+      requestBody:
+        description: User Data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUser'
+      responses:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: User not found
+
 components:
   schemas:
-    Greeting:
+    User:
       type: object
       description: A value with the greeting contents.
       properties:
-        message:
+        id:
           type: string
           description: The string representation of the greeting.
+        firstName:
+          type: string
+          description: The string representation of the greeting.
+        lastName:
+          type: string
+          description: The string representation of the greeting.
+        age:
+          type: integer
+          description: The string representation of the greeting.
       required:
-        - message
+        - id
+        - firstName
+        - lastName
+        - age
+    UpdateUser:
+      type: object
+      description: A value with the user contents.
+      properties:
+        firstName:
+          type: string
+          description: The string representation of the greeting.
+        lastName:
+          type: string
+          description: The string representation of the greeting.
+        age:
+          type: integer
+          description: The string representation of the greeting.
