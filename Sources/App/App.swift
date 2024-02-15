@@ -13,10 +13,10 @@ struct App {
       publicDirectory: app.directory.publicDirectory
     )
     
-    app.middleware.use(fileMiddleware)
-
-    app.middleware.use(CORSMiddleware())
-
+    app.middleware.use(fileMiddleware, at: .end)
+    
+    app.middleware.use(CORSMiddleware(), at: .beginning)
+    
     let transport = VaporTransport(routesBuilder: app)
 
     try APIHandler().registerHandlers(on: transport)
@@ -32,4 +32,3 @@ struct App {
     }
   }
 }
-
