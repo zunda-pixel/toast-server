@@ -10,10 +10,21 @@ struct App {
 
     let app = Application(env)
     defer { app.shutdown() }
-
+    
     let fileMiddleware = FileMiddleware(
       publicDirectory: app.directory.publicDirectory
     )
+
+    switch app.environment {
+    case .development:
+      app.passwords.use(.plaintext)
+    case .testing:
+      app.passwords.use(.bcrypt)
+    case .production:
+      app.passwords.use(.bcrypt)
+    default:
+      fatalError()
+    }
 
     app.middleware.use(fileMiddleware, at: .end)
 
@@ -21,7 +32,8 @@ struct App {
 
     let transport = VaporTransport(routesBuilder: app)
 
-    try APIHandler().registerHandlers(on: transport)
+    let handler = APIHandler(app: app)
+    try handler.registerHandlers(on: transport)
 
     do {
       try await app.execute()
