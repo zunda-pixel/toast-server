@@ -19,7 +19,7 @@ jobs:
       run: swiftly install ${{ matrix.swift }}
     - uses: actions/checkout@v4
     - name: Lint
-      run: swift run -c release swift-format lint ./Sources -r -p -s
+      run: swift package plugin lint-source-code
   test:
     name: Test Swift ${{ matrix.swift }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
