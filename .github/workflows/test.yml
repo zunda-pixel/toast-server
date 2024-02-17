@@ -25,6 +25,8 @@ jobs:
         echo DATABASE_NAME=${{ secrets.DATABASE_NAME }} >> .env
         echo DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} >> .env
         echo DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }} >> .env
+    - name: ls
+      run: ls -la
     - name: Build
       run: swift build -v
     - name: Test Swift
