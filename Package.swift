@@ -19,6 +19,8 @@ let package = Package(
     .package(url: "https://github.com/vapor/fluent-mysql-driver", from: "4.4.0"),
     .package(url: "https://github.com/vapor/fluent", from: "4.9.0"),
     .package(url: "https://github.com/apple/swift-format", from: "509.0.0"),
+    .package(url: "https://github.com/Mikroservices/Smtp", from: "3.0.3"),
+    .package(url: "https://github.com/Kitura/Swift-SMTP", from: "6.0.0"),
   ],
   targets: [
     .executableTarget(
@@ -29,6 +31,8 @@ let package = Package(
         .product(name: "OpenAPIVapor", package: "swift-openapi-vapor"),
         .product(name: "FluentMySQLDriver", package: "fluent-mysql-driver"),
         .product(name: "Fluent", package: "fluent"),
+        .product(name: "Smtp", package: "Smtp"),
+        .product(name: "SwiftSMTP", package: "Swift-SMTP"),
       ],
       plugins: [
         .plugin(name: "OpenAPIGenerator", package: "swift-openapi-generator")
