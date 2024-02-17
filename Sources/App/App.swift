@@ -13,6 +13,8 @@ struct App {
     let app = Application(env)
     defer { app.shutdown() }
 
+    app.get("openapi") { request in request.redirect(to: "openapi.html", redirectType: .permanent) }
+
     let fileMiddleware = FileMiddleware(
       publicDirectory: app.directory.publicDirectory
     )
