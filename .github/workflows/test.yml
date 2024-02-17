@@ -12,11 +12,6 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         swift: ["5.9.2"]
-    env:
-      DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
-      DATABASE_NAME:${{ secrets.DATABASE_NAME }}
-      DATABASE_PASSWORD:${{ secrets.DATABASE_PASSWORD }}
-      DATABASE_USERNAME:${{ secrets.DATABASE_USERNAME }}
     steps:
     - name: Install swiftly
       run: curl -L https://swift-server.github.io/swiftly/swiftly-install.sh | bash -s -- --disable-confirmation
@@ -34,3 +29,8 @@ jobs:
       run: swift build -v
     - name: Test Swift
       run: swift test
+      env:
+        DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+        DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+        DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+        DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
