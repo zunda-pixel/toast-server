@@ -5,8 +5,9 @@ import Fluent
 import FluentMySQLDriver
 
 final class HelloWorldServerTests: XCTestCase {
-  var handler: any APIProtocol {
+  let app: Application = {
     let app = Application()
+    
     app.databases.use(
       .mysql(
         hostname: Environment.get("DATABASE_HOST")!,
@@ -16,7 +17,14 @@ final class HelloWorldServerTests: XCTestCase {
       ),
       as: .mysql
     )
-
+    return app
+  }()
+  
+  deinit {
+    app.shutdown()
+  }
+  
+  var handler: any APIProtocol {
     return APIHandler(app: app)
   }
   
@@ -41,7 +49,7 @@ final class HelloWorldServerTests: XCTestCase {
       age: 21
     )
     
-    let response1 = try await handler.postUser(.init(body: .json(user)))
+    _ = try await handler.postUser(.init(body: .json(user)))
     
     let response2 = try await handler.getUserById(query: .init(userID: user.id))
     try XCTAssertEqual(response2.ok.body.json, user)
@@ -55,7 +63,7 @@ final class HelloWorldServerTests: XCTestCase {
       age: 21
     )
     
-    let response1 = try await handler.postUser(.init(body: .json(user)))
+    _ = try await handler.postUser(.init(body: .json(user)))
     let response2 = try await handler.deleteUserByID(.init(query: .init(userID: user.id)))
 
     try XCTAssertEqual(response2.noContent, .init())
