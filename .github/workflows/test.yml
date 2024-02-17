@@ -13,6 +13,10 @@ jobs:
         os: [ubuntu-latest]
         swift: ["5.9.2"]
     steps:
+    - uses: swift-actions/setup-swift@v1
+      with:
+        swift-version: ${{ matrix.swift }}
+    - uses: actions/checkout@v4
     - name: Show Database Host
     - run: echo ${{ secrets.DATABASE_HOST }}
     - name: Generate dotenv
@@ -22,10 +26,6 @@ jobs:
         echo DATABASE_NAME=${{ secrets.DATABASE_NAME }} >> .env
         echo DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} >> .env
         echo DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }} >> .env
-    - uses: swift-actions/setup-swift@v1
-      with:
-        swift-version: ${{ matrix.swift }}
-    - uses: actions/checkout@v4
     - name: Build
       run: swift build -v
     - name: Test Swift
