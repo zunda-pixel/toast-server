@@ -17,24 +17,22 @@ struct App {
       publicDirectory: app.directory.publicDirectory
     )
 
+    app.databases.use(
+      .mysql(
+        hostname: Environment.get("DATABASE_HOST")!,
+        username: Environment.get("DATABASE_USERNAME")!,
+        password: Environment.get("DATABASE_PASSWORD")!,
+        database: Environment.get("DATABASE_NAME")!,
+        tlsConfiguration: .makePreSharedKeyConfiguration()
+      ),
+      as: .mysql
+    )
+
     switch app.environment {
     case .development:
       app.passwords.use(.plaintext)
-      app.databases.use(
-        .mysql(
-          hostname: Environment.get("DATABASE_HOST")!.trimmingCharacters(in: .newlines),
-          username: Environment.get("DATABASE_USERNAME")!,
-          password: Environment.get("DATABASE_PASSWORD")!,
-          database: Environment.get("DATABASE_NAME")!
-        ),
-        as: .mysql
-      )
     case .production:
       app.passwords.use(.bcrypt)
-      app.databases.use(
-        try .mysql(url: Environment.get("JAWSDB_URL")!),
-        as: .mysql
-      )
     default:
       fatalError()
     }
