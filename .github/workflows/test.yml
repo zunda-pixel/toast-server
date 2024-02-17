@@ -20,7 +20,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: Lint
       run: swift run -c release swift-format lint ./Sources -r -p -s
-  build:
+  test:
     name: Test Swift ${{ matrix.swift }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
