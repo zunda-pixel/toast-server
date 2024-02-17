@@ -5,6 +5,21 @@ on:
     branches: [ "main", "develop" ]
 
 jobs:
+  lint:
+    name: Swift ${{ matrix.swift }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        swift: ["5.9.2"]
+    steps:
+    - name: Install swiftly
+      run: curl -L https://swift-server.github.io/swiftly/swiftly-install.sh | bash -s -- --disable-confirmation
+    - name: Install Swift
+      run: swiftly install ${{ matrix.swift }}
+    - uses: actions/checkout@v4
+    - name: Build
+      run: swift run -c release swift-format lint . -r -p -s
   build:
     name: Swift ${{ matrix.swift }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
