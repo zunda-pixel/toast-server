@@ -21,7 +21,7 @@ jobs:
     - name: Build
       run: swift build -v
     - name: Test Swift
-      run: swift test
+      run: swift test -v
       env:
         DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
         DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
