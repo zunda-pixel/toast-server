@@ -1,4 +1,4 @@
-name: Test
+name: Lint & Test
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   lint:
-    name: Swift ${{ matrix.swift }} on ${{ matrix.os }}
+    name: Lint Swift ${{ matrix.swift }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -18,10 +18,10 @@ jobs:
     - name: Install Swift
       run: swiftly install ${{ matrix.swift }}
     - uses: actions/checkout@v4
-    - name: Build
-      run: swift run -c release swift-format lint . -r -p -s
+    - name: Lint
+      run: swift run -c release swift-format lint ./Sources -r -p -s
   build:
-    name: Swift ${{ matrix.swift }} on ${{ matrix.os }}
+    name: Test Swift ${{ matrix.swift }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
