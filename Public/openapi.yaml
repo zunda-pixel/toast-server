@@ -139,27 +139,6 @@ paths:
           description: Invalid ID supplied
         '404':
           description: User not found
-#  /mail:
-#    post:
-#      tags:
-#        - Mail
-#      summary: Send Mail
-#      description: Returns a single user
-#      operationId: postMail
-#      parameters:
-#        - name: content
-#          in: query
-#          description: Mail content
-#          required: true
-#          schema:
-#            type: string
-#      responses:
-#        '200':
-#          description: successful operation
-#          content:
-#            application/json:
-#              schema:
-#                type: string
 
 components:
   schemas:
