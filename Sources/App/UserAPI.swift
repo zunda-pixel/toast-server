@@ -15,7 +15,7 @@ extension APIHandler {
   }
 
   func postUser(_ input: Operations.postUser.Input) async throws -> Operations.postUser.Output {
-    guard case let .json(user) = input.body else { return .badRequest(.init()) }
+    guard case .json(let user) = input.body else { return .badRequest(.init()) }
     try await user.dbUser.create(on: app.db)
     return .ok(.init(body: .json(user)))
   }
@@ -43,7 +43,7 @@ extension APIHandler {
     -> Operations.updateUserByID.Output
   {
     guard let userID = UUID(uuidString: input.query.userID) else { return .badRequest(.init()) }
-    guard case let .json(user) = input.body else { return .badRequest(.init()) }
+    guard case .json(let user) = input.body else { return .badRequest(.init()) }
 
     let userCount = try await User.query(on: app.db)
       .filter(\.$id, .equal, userID).limit(1).count()

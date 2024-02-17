@@ -1,12 +1,12 @@
-name: Test
+name: Lint & Test
 
 on:
   pull_request:
     branches: [ "main", "develop" ]
 
 jobs:
-  build:
-    name: Swift ${{ matrix.swift }} on ${{ matrix.os }}
+  lint:
+    name: Lint Swift ${{ matrix.swift }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -18,14 +18,27 @@ jobs:
     - name: Install Swift
       run: swiftly install ${{ matrix.swift }}
     - uses: actions/checkout@v4
-    - name: Generate dotenv
-      run: |
-        touch .env
-        echo DATABASE_HOST=${{ secrets.DATABASE_HOST }} >> .env
-        echo DATABASE_NAME=${{ secrets.DATABASE_NAME }} >> .env
-        echo DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} >> .env
-        echo DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }} >> .env
+    - name: Lint
+      run: swift package plugin lint-source-code
+  test:
+    name: Test Swift ${{ matrix.swift }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        swift: ["5.9.2"]
+    steps:
+    - name: Install swiftly
+      run: curl -L https://swift-server.github.io/swiftly/swiftly-install.sh | bash -s -- --disable-confirmation
+    - name: Install Swift
+      run: swiftly install ${{ matrix.swift }}
+    - uses: actions/checkout@v4
     - name: Build
       run: swift build -v
     - name: Test Swift
-      run: swift test
+      run: swift test -v
+      env:
+        DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+        DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+        DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+        DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
