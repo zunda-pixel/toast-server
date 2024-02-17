@@ -27,4 +27,4 @@ jobs:
     - name: Build
       run: swift build -v
     - name: Test Swift
-      run: swift test -v
+      run: swift test
