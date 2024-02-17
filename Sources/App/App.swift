@@ -20,10 +20,21 @@ struct App {
     switch app.environment {
     case .development:
       app.passwords.use(.plaintext)
-    case .testing:
-      app.passwords.use(.bcrypt)
+      app.databases.use(
+        .mysql(
+          hostname: Environment.get("DATABASE_HOST")!.trimmingCharacters(in: .newlines),
+          username: Environment.get("DATABASE_USERNAME")!,
+          password: Environment.get("DATABASE_PASSWORD")!,
+          database: Environment.get("DATABASE_NAME")!
+        ),
+        as: .mysql
+      )
     case .production:
       app.passwords.use(.bcrypt)
+      app.databases.use(
+        try .mysql(url: Environment.get("JAWSDB_URL")!),
+        as: .mysql
+      )
     default:
       fatalError()
     }
@@ -31,16 +42,6 @@ struct App {
     app.middleware.use(fileMiddleware, at: .end)
 
     app.middleware.use(CORSMiddleware(), at: .beginning)
-
-    app.databases.use(
-      .mysql(
-        hostname: Environment.get("DATABASE_HOST")!,
-        username: Environment.get("DATABASE_USERNAME")!,
-        password: Environment.get("DATABASE_PASSWORD")!,
-        database: Environment.get("DATABASE_NAME")!
-      ),
-      as: .mysql
-    )
 
     let transport = VaporTransport(routesBuilder: app)
 
