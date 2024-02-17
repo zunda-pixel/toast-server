@@ -13,12 +13,12 @@ jobs:
         os: [ubuntu-latest]
         swift: ["5.9.2"]
     steps:
+    - name: Show Database Host
+      run: echo ${{ secrets.DATABASE_HOST }}
     - uses: swift-actions/setup-swift@v1
       with:
         swift-version: ${{ matrix.swift }}
     - uses: actions/checkout@v4
-    - name: Show Database Host
-      run: echo ${{ secrets.DATABASE_HOST }}
     - name: Generate dotenv
       run: |
         touch .env
