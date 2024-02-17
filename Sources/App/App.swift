@@ -1,8 +1,8 @@
-import Vapor
-import OpenAPIVapor
-import Logging
 import Fluent
 import FluentMySQLDriver
+import Logging
+import OpenAPIVapor
+import Vapor
 
 @main
 struct App {
@@ -12,7 +12,7 @@ struct App {
 
     let app = Application(env)
     defer { app.shutdown() }
-    
+
     let fileMiddleware = FileMiddleware(
       publicDirectory: app.directory.publicDirectory
     )
@@ -31,7 +31,7 @@ struct App {
     app.middleware.use(fileMiddleware, at: .end)
 
     app.middleware.use(CORSMiddleware(), at: .beginning)
-    
+
     app.databases.use(
       .mysql(
         hostname: Environment.get("DATABASE_HOST")!,
@@ -41,7 +41,7 @@ struct App {
       ),
       as: .mysql
     )
-    
+
     let transport = VaporTransport(routesBuilder: app)
 
     let handler = APIHandler(app: app)

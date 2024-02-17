@@ -3,21 +3,21 @@ import Foundation
 
 final class User: Model {
   static let schema = "User"
-  
+
   @ID(key: .id)
   var id: UUID?
-  
+
   @Field(key: "firstName")
   var firstName: String
-  
+
   @Field(key: "lastName")
   var lastName: String
-  
+
   @Field(key: "age")
   var age: Int
-  
-  init() { }
-  
+
+  init() {}
+
   init(
     id: UUID?,
     firstName: String,
@@ -29,7 +29,7 @@ final class User: Model {
     self.lastName = lastName
     self.age = age
   }
-  
+
   var componentUser: Components.Schemas.User {
     .init(
       id: self.id!.uuidString,

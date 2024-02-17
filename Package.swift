@@ -18,6 +18,7 @@ let package = Package(
     .package(url: "https://github.com/swift-server/swift-openapi-vapor", from: "1.0.0"),
     .package(url: "https://github.com/vapor/fluent-mysql-driver", from: "4.4.0"),
     .package(url: "https://github.com/vapor/fluent", from: "4.9.0"),
+    .package(url: "https://github.com/apple/swift-format", from: "509.0.0"),
   ],
   targets: [
     .executableTarget(
