@@ -46,7 +46,14 @@ struct App {
     let transport = VaporTransport(routesBuilder: app)
 
     let handler = APIHandler(app: app)
-    try handler.registerHandlers(on: transport)
+    try handler.registerHandlers(
+      on: transport,
+      serverURL: URL(string: "/api")!,
+      middlewares: [
+        LoggingMiddleware(),
+        MetricsMiddleware(counterPrefix: "ToastServer"),
+      ]
+    )
 
     do {
       try await app.execute()
