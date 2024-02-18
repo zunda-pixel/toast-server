@@ -22,9 +22,9 @@ externalDocs:
   description: Find out more about Swagger
   url: http://swagger.io
 servers:
-  - url: https://toast-server-d79afc6f1b52.herokuapp.com/
+  - url: https://toast-server-d79afc6f1b52.herokuapp.com/api/
     description: Producction deployment.
-  - url: http://localhost:8080/
+  - url: http://localhost:8080/api/
     description: Local Host deployment.
 tags:
   - name: User
