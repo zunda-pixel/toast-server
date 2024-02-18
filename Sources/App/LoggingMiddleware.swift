@@ -12,7 +12,7 @@ actor LoggingMiddleware {
     self.bodyLoggingPolicy = bodyLoggingConfiguration
   }
   
-  fileprivate static var defaultLogger: Logger { Logger(label: "com.zunda.toast-server.logging-middleware") }
+  fileprivate static var defaultLogger: Logger { Logger(label: "com.toast.toast-server.logging-middleware") }
 }
 
 extension LoggingMiddleware: ClientMiddleware {
