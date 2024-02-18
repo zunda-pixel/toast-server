@@ -5,7 +5,7 @@ import OpenAPIRuntime
 
 struct MetricsMiddleware {
   var counterPrefix: String
-  
+
   init(counterPrefix: String) {
     self.counterPrefix = counterPrefix
   }
@@ -21,7 +21,8 @@ extension MetricsMiddleware: ClientMiddleware {
   ) async throws -> (HTTPResponse, HTTPBody?) {
     do {
       let (response, responseBody) = try await next(request, body, baseURL)
-      Counter(label: "\(counterPrefix).\(operationID).\(response.status.code.description)").increment()
+      Counter(label: "\(counterPrefix).\(operationID).\(response.status.code.description)")
+        .increment()
       return (response, responseBody)
     } catch {
       Counter(label: "\(counterPrefix).\(operationID).error").increment()
@@ -38,10 +39,13 @@ extension MetricsMiddleware: ServerMiddleware {
     operationID: String,
     next: (HTTPRequest, HTTPBody?, ServerRequestMetadata) async throws -> (HTTPResponse, HTTPBody?)
   ) async throws -> (HTTPResponse, HTTPBody?) {
-    func recordResult(_ result: String) { Counter(label: "\(counterPrefix).\(operationID).\(result)").increment() }
+    func recordResult(_ result: String) {
+      Counter(label: "\(counterPrefix).\(operationID).\(result)").increment()
+    }
     do {
       let (response, responseBody) = try await next(request, body, metadata)
-      Counter(label: "\(counterPrefix).\(operationID).\(response.status.code.description)").increment()
+      Counter(label: "\(counterPrefix).\(operationID).\(response.status.code.description)")
+        .increment()
       return (response, responseBody)
     } catch {
       Counter(label: "\(counterPrefix).\(operationID).error").increment()

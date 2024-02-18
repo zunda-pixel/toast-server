@@ -1,9 +1,9 @@
 import Fluent
 import FluentMySQLDriver
-import OpenAPIVapor
-import Vapor
 import Metrics
+import OpenAPIVapor
 import Prometheus
+import Vapor
 
 @main
 struct App {
@@ -15,10 +15,10 @@ struct App {
     defer { app.shutdown() }
 
     app.get("openapi") { request in request.redirect(to: "openapi.html", redirectType: .permanent) }
-    
+
     let registry = PrometheusCollectorRegistry()
     MetricsSystem.bootstrap(PrometheusMetricsFactory(registry: registry))
-    
+
     app.get("metrics") { request in
       var buffer: [UInt8] = []
       buffer.reserveCapacity(1024)
@@ -57,7 +57,7 @@ struct App {
     let transport = VaporTransport(routesBuilder: app)
 
     let handler = APIHandler(app: app)
-    
+
     try handler.registerHandlers(
       on: transport,
       serverURL: URL(string: "/api")!,

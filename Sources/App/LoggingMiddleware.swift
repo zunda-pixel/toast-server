@@ -1,18 +1,23 @@
-import OpenAPIRuntime
 import Foundation
 import HTTPTypes
 import Logging
+import OpenAPIRuntime
 
 actor LoggingMiddleware {
   private let logger: Logger
   let bodyLoggingPolicy: BodyLoggingPolicy
-  
-  init(logger: Logger = defaultLogger, bodyLoggingConfiguration: BodyLoggingPolicy = .never) {
+
+  init(
+    logger: Logger = defaultLogger,
+    bodyLoggingConfiguration: BodyLoggingPolicy = .never
+  ) {
     self.logger = logger
     self.bodyLoggingPolicy = bodyLoggingConfiguration
   }
-  
-  fileprivate static var defaultLogger: Logger { Logger(label: "com.toast.toast-server.logging-middleware") }
+
+  fileprivate static var defaultLogger: Logger {
+    Logger(label: "com.toast.toast-server.logging-middleware")
+  }
 }
 
 extension LoggingMiddleware: ClientMiddleware {
@@ -27,7 +32,8 @@ extension LoggingMiddleware: ClientMiddleware {
     log(request, requestBodyToLog)
     do {
       let (response, responseBody) = try await next(request, requestBodyForNext, baseURL)
-      let (responseBodyToLog, responseBodyForNext) = try await bodyLoggingPolicy.process(responseBody)
+      let (responseBodyToLog, responseBodyForNext) = try await bodyLoggingPolicy.process(
+        responseBody)
       log(request, response, responseBodyToLog)
       return (response, responseBodyForNext)
     } catch {
@@ -43,14 +49,17 @@ extension LoggingMiddleware: ServerMiddleware {
     body: OpenAPIRuntime.HTTPBody?,
     metadata: OpenAPIRuntime.ServerRequestMetadata,
     operationID: String,
-    next: @Sendable (HTTPTypes.HTTPRequest, OpenAPIRuntime.HTTPBody?, OpenAPIRuntime.ServerRequestMetadata)
-    async throws -> (HTTPTypes.HTTPResponse, OpenAPIRuntime.HTTPBody?)
+    next: @Sendable (
+      HTTPTypes.HTTPRequest, OpenAPIRuntime.HTTPBody?, OpenAPIRuntime.ServerRequestMetadata
+    )
+      async throws -> (HTTPTypes.HTTPResponse, OpenAPIRuntime.HTTPBody?)
   ) async throws -> (HTTPTypes.HTTPResponse, OpenAPIRuntime.HTTPBody?) {
     let (requestBodyToLog, requestBodyForNext) = try await bodyLoggingPolicy.process(body)
     log(request, requestBodyToLog)
     do {
       let (response, responseBody) = try await next(request, requestBodyForNext, metadata)
-      let (responseBodyToLog, responseBodyForNext) = try await bodyLoggingPolicy.process(responseBody)
+      let (responseBodyToLog, responseBodyForNext) = try await bodyLoggingPolicy.process(
+        responseBody)
       log(request, response, responseBodyToLog)
       return (response, responseBodyForNext)
     } catch {
@@ -71,8 +80,12 @@ extension LoggingMiddleware {
       ]
     )
   }
-  
-  func log(_ request: HTTPRequest, _ response: HTTPResponse, _ responseBody: BodyLoggingPolicy.BodyLog) {
+
+  func log(
+    _ request: HTTPRequest,
+    _ response: HTTPResponse,
+    _ responseBody: BodyLoggingPolicy.BodyLog
+  ) {
     logger.debug(
       "Response",
       metadata: [
@@ -82,8 +95,11 @@ extension LoggingMiddleware {
       ]
     )
   }
-  
-  func log(_ request: HTTPRequest, failedWith error: any Error) {
+
+  func log(
+    _ request: HTTPRequest,
+    failedWith error: any Error
+  ) {
     logger.warning(
       "Request error",
       metadata: [
@@ -99,7 +115,7 @@ enum BodyLoggingPolicy {
   case never
   /// Log request and response bodies that have a known length less than or equal to `maxBytes`.
   case upTo(maxBytes: Int)
-  
+
   enum BodyLog: Equatable, CustomStringConvertible {
     /// There is no body to log.
     case none
@@ -111,7 +127,7 @@ enum BodyLoggingPolicy {
     case tooManyBytesToLog(Int64)
     /// The body can be logged.
     case complete(Data)
-    
+
     var description: String {
       switch self {
       case .none: return "<none>"
@@ -124,7 +140,7 @@ enum BodyLoggingPolicy {
       }
     }
   }
-  
+
   func process(_ body: HTTPBody?) async throws -> (bodyToLog: BodyLog, bodyForNext: HTTPBody?) {
     switch (body?.length, self) {
     case (.none, _): return (.none, body)
