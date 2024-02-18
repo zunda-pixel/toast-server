@@ -5,7 +5,7 @@ import PackageDescription
 let package = Package(
   name: "toast-server",
   platforms: [
-    .macOS(.v10_15),
+    .macOS(.v13),
     .iOS(.v13),
     .tvOS(.v13),
     .watchOS(.v6),
@@ -21,6 +21,8 @@ let package = Package(
     .package(url: "https://github.com/apple/swift-format", from: "509.0.0"),
     .package(url: "https://github.com/Mikroservices/Smtp", from: "3.0.3"),
     .package(url: "https://github.com/Kitura/Swift-SMTP", from: "6.0.0"),
+    .package(url: "https://github.com/apple/swift-metrics", from: "2.4.1"),
+    .package(url: "https://github.com/swift-server/swift-prometheus", exact: "2.0.0-alpha.1"), // todo
   ],
   targets: [
     .executableTarget(
@@ -33,6 +35,8 @@ let package = Package(
         .product(name: "Fluent", package: "fluent"),
         .product(name: "Smtp", package: "Smtp"),
         .product(name: "SwiftSMTP", package: "Swift-SMTP"),
+        .product(name: "Metrics", package: "swift-metrics"),
+        .product(name: "Prometheus", package: "swift-prometheus"),
       ],
       plugins: [
         .plugin(name: "OpenAPIGenerator", package: "swift-openapi-generator")
