@@ -19,6 +19,8 @@ let package = Package(
     .package(url: "https://github.com/vapor/fluent-mysql-driver", from: "4.4.0"),
     .package(url: "https://github.com/vapor/fluent", from: "4.9.0"),
     .package(url: "https://github.com/apple/swift-format", from: "509.0.0"),
+    .package(url: "https://github.com/Mikroservices/Smtp", from: "3.0.3"),
+    .package(url: "https://github.com/Kitura/Swift-SMTP", from: "6.0.0"),
     .package(url: "https://github.com/apple/swift-metrics", from: "2.4.1"),
     .package(url: "https://github.com/swift-server/swift-prometheus", exact: "2.0.0-alpha.1"), // todo
   ],
@@ -31,6 +33,8 @@ let package = Package(
         .product(name: "OpenAPIVapor", package: "swift-openapi-vapor"),
         .product(name: "FluentMySQLDriver", package: "fluent-mysql-driver"),
         .product(name: "Fluent", package: "fluent"),
+        .product(name: "Smtp", package: "Smtp"),
+        .product(name: "SwiftSMTP", package: "Swift-SMTP"),
         .product(name: "Metrics", package: "swift-metrics"),
         .product(name: "Prometheus", package: "swift-prometheus"),
       ],
