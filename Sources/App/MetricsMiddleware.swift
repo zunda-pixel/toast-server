@@ -5,10 +5,6 @@ import OpenAPIRuntime
 
 struct MetricsMiddleware {
   var counterPrefix: String
-
-  init(counterPrefix: String) {
-    self.counterPrefix = counterPrefix
-  }
 }
 
 extension MetricsMiddleware: ClientMiddleware {
