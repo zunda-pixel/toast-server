@@ -1,7 +1,8 @@
 import Fluent
 import FluentMySQLDriver
-import Logging
+import Metrics
 import OpenAPIVapor
+import Prometheus
 import Vapor
 
 @main
@@ -14,6 +15,16 @@ struct App {
     defer { app.shutdown() }
 
     app.get("openapi") { request in request.redirect(to: "openapi.html", redirectType: .permanent) }
+
+    let registry = PrometheusCollectorRegistry()
+    MetricsSystem.bootstrap(PrometheusMetricsFactory(registry: registry))
+
+    app.get("metrics") { request in
+      var buffer: [UInt8] = []
+      buffer.reserveCapacity(1024)
+      registry.emit(into: &buffer)
+      return String(decoding: buffer, as: UTF8.self)
+    }
 
     let fileMiddleware = FileMiddleware(
       publicDirectory: app.directory.publicDirectory
@@ -46,7 +57,15 @@ struct App {
     let transport = VaporTransport(routesBuilder: app)
 
     let handler = APIHandler(app: app)
-    try handler.registerHandlers(on: transport)
+
+    try handler.registerHandlers(
+      on: transport,
+      serverURL: URL(string: "/api")!,
+      middlewares: [
+        LoggingMiddleware(bodyLoggingConfiguration: .upTo(maxBytes: 1024)),
+        MetricsMiddleware(counterPrefix: "ToastServer"),
+      ]
+    )
 
     do {
       try await app.execute()
